@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Movie</title>
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="../static/css/myStyleIndex.css"/>
+    <!-- <link rel="mystyle" href="../static/css/search-movie.css"> -->
+    <!-- JavaScript Bundle with Popper -->
+   
+    <!-- <script src="../static/js/script.js" defer></script> -->
+    <script src="../static/js/script.js" defer></script>
+    <script type="text/javascript">
+      window.onload = function() {
+         let data = {{data|safe}};
+         let userName = data.name.charAt(0).toUpperCase() + data.name.slice(1).toLowerCase();
+         document.getElementById("addUserName").innerHTML = `Welcome back ${userName}!`;
+         if(data) ifLoged(true);
+         listOfImdb(data.ourimdb);
+      }
+    </script>
+  </head>
+  <body class="box pb-5">
+  {% if session['user_id']%}
+  {# nav #}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <h6 id="addUserName" class="navbar-brand color-success"></h6>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/seen/">List of seen</a>
+        </li>
+        {# <li class="nav-item">
+          <a class="nav-link" href="/future/">Saved for Future</a>
+        </li> #}
+        <li class="nav-item">
+          <a class="nav-link" href="/logout/">Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{Disabled}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  {# nav end #}
+  {% else %}
+  <div class="col-6 mx-auto pt-4" >
+  <a class="btn btn-success text-white text-center" href="/">
+  Login or Register?  
+  </a>
+  </div>
+  {% endif %}
+  <div id="resulted_movie">
+    <div id="our_result" > 
+    </div>
+      </div>
+    <div 
+      class="hero container overflow-hidden text-white"
+    >
+      <div class="col-8 mt-5 mx-auto">
+        <form
+          id="search_form"
+          method="post"
+          style=" font-weight: bold;"
+          action="/search-results/"
+        >
+          <!-- Rating -->
+          <h3  class="text-center mb-3">IMDB Rating</h3>
+          <div class="row text-center">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+            <label for="user_rating_min">Minimum Rating ★ </label>
+            <select name="user_rating_min" id="min_rating">
+              <option value="1" checked>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+            <label for="user_rating_max">Maximum Rating ★ </label>
+            <select name="user_rating_max" id="max_rating">
+              <option value="10" checked>10</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+            </div>
+          </div>
+          <!-- Genre -->
+          <h3 class="text-center mt-5">Please select Genres</h3>
+          <div class="inputs container mt-4">
+            <div class="row">
+              <div class="col-sm-12 col-md-6 col-lg-3" id ="genre">
+                    <input
+                      id="genres-1"
+                      type="checkbox"
+                      name="genres"
+                      value="action"
+                      class="form-check-input"
+                    />
+                    <label for="genres-1">Action</label>
+                 </div>
+                 <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-2"
+                      type="checkbox"
+                      name="genres"
+                      value="adventure"
+                      class="form-check-input"
+                    />
+                    <label for="genres-2">Adventure</label>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-3"
+                      type="checkbox"
+                      name="genres"
+                      value="animation"
+                      class="form-check-input"
+                    />
+                    <label for="genres-3">Animation</label>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-4"
+                      type="checkbox"
+                      name="genres"
+                      value="biography"
+                      class="form-check-input"
+                    />
+                    <label for="genres-4">Biography</label>
+                  </div>
+              </div>
+            <div class="row">
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-5"
+                      type="checkbox"
+                      name="genres"
+                      value="comedy"
+                      class="form-check-input"
+                    />
+                    <label for="genres-5">Comedy</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-6"
+                      type="checkbox"
+                      name="genres"
+                      value="crime"
+                      class="form-check-input"
+                    />
+                    <label for="genres-6">Crime</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-7"
+                      type="checkbox"
+                      name="genres"
+                      value="documentary"
+                      class="form-check-input"
+                    />
+                    <label for="genres-7">Documentary</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-8"
+                      type="checkbox"
+                      name="genres"
+                      value="biography"
+                      class="form-check-input"
+                    />
+                    <label for="genres-8">Drama</label>
+                    </div>
+              </div>
+            <div class="row">
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-9"
+                      type="checkbox"
+                      name="genres"
+                      value="family"
+                      class="form-check-input"
+                    />
+                    <label for="genres-9">Family</label>
+                 </div>
+                 <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-10"
+                      type="checkbox"
+                      name="genres"
+                      value="fantasy"
+                      class="form-check-input"
+                    />
+                    <label for="genres-10">Fantasy</label>
+                 </div>
+                 <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-11"
+                      type="checkbox"
+                      name="genres"
+                      value="film_noir"
+                      class="form-check-input"
+                    />
+                    <label for="genres-11">Film-noir</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-12"
+                      type="checkbox"
+                      name="genres"
+                      value="game_show"
+                      class="form-check-input"
+                    />
+                    <label for="genres-12">Game-Show</label>
+                 </div>
+              </div>
+            <div class="row">
+                 <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-13"
+                      type="checkbox"
+                      name="genres"
+                      value="history"
+                      class="form-check-input"
+                    />
+                    <label for="genres-13">History</label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-14"
+                      type="checkbox"
+                      name="genres"
+                      value="horror"
+                      class="form-check-input"
+                    />
+                    <label for="genres-14">Horror</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-15"
+                      type="checkbox"
+                      name="genres"
+                      value="music"
+                      class="form-check-input"
+                    />
+                    <label for="genres-15">Music</label>
+                 </div>
+                 <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-16"
+                      type="checkbox"
+                      name="genres"
+                      value="musical"
+                      class="form-check-input"
+                    />
+                    <label for="genres-16">Musical</label>
+                  </div>
+              </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-17"
+                      type="checkbox"
+                      name="genres"
+                      value="mystery"
+                      class="form-check-input"
+                    />
+                    <label for="genres-17">Mystery</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-18"
+                      type="checkbox"
+                      name="genres"
+                      value="news"
+                      class="form-check-input"
+                    />
+                    <label for="genres-18">News</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-19"
+                      type="checkbox"
+                      name="genres"
+                      value="reality_tv"
+                      class="form-check-input"
+                    />
+                    <label for="genres-19">Reality-TV</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-20"
+                      type="checkbox"
+                      name="genres"
+                      value="romance"
+                      class="form-check-input"
+                    />
+                    <label for="genres-20">Romance</label>
+                  </div>
+              </div>
+            <div class="row">
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-21"
+                      type="checkbox"
+                      name="genres"
+                      value="sci_fi"
+                      class="form-check-input"
+                    />
+                    <label for="genres-21">Sci-Fi</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-22"
+                      type="checkbox"
+                      name="genres"
+                      value="sport"
+                      class="form-check-input"
+                    />
+                    <label for="genres-22">Sport</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                   <input
+                      id="genres-23"
+                      type="checkbox"
+                      name="genres"
+                      value="talk_show"
+                      class="form-check-input"
+                    />
+                    <label for="genres-23">Talk-Show</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3">
+                    <input
+                      id="genres-24"
+                      type="checkbox"
+                      name="genres"
+                      value="thriller"
+                      class="form-check-input"
+                    />
+                    <label for="genres-24">Thriller</label>
+                  </div>
+              </div>
+            <div class="row">
+                  <div class="col-sm-12 col-md-6 col-lg-3" col-lg-6">
+                    <input
+                      id="genres-25"
+                      type="checkbox"
+                      name="genres"
+                      value="war"
+                      class="form-check-input"
+                    />
+                    <label for="genres-25">War</label>
+                  </div>
+                  <div class="col-sm-12 col-md-6 col-lg-3" col-lg-6">
+                    <input
+                      id="genres-26"
+                      type="checkbox"
+                      name="genres"
+                      value="western"
+                      class="form-check-input"
+                    />
+                    <label for="genres-26">Western</label>
+                  </div>
+              </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">  
+              <button
+                type="submit"
+                id="search_btn"
+                class="btn btn-light text-dark">
+                Get Movie
+              </button>
+            </div>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- ------------Custom search collabsible end ------------------- -->
+    
+    </div>
+   <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  </body>
+</html>
