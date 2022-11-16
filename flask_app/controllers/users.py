@@ -32,7 +32,7 @@ def reg():
     session['user_name'] = request.form['user_name']
     return redirect(url_for('search_movie'))
 
-@app.route('/log', methods = ['POST'])
+@app.route('/log/', methods = ['POST'])
 def log():
     data = {
         "email": request.form['email']

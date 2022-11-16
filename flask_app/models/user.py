@@ -1,7 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
 import re
-from flask_app.models import movie
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
 class User:
@@ -13,18 +12,18 @@ class User:
         self.password = db_data['password']
         self.created_at = db_data['created_at']
         self.updated_at = db_data['updated_at']
-        self.movies= []
+        
 
     @classmethod
     def save(cls, data):
-        query = 'insert into users (user_name,email,password,created_at,updated_at) values(%(user_name)s,%(email)s,%(password)s,now(),now())'
+        query = "insert into users (user_name,email,password,created_at,updated_at) values(%(user_name)s,%(email)s,%(password)s,now(),now());"
         return connectToMySQL(cls.db_name).query_db(query,data)
     
     
     
     @classmethod
     def get_by_email(cls,data):
-        query = 'select * from users where email = %(email)s;'
+        query = "select * from users where email = %(email)s;"
         results = connectToMySQL(cls.db_name).query_db(query,data)
         if len(results) < 1:
             return False
@@ -32,7 +31,7 @@ class User:
 
     @classmethod
     def check_existence(cls,data):
-        query = 'select * from users where email = %(email)s;'
+        query = "select * from users where email = %(email)s;"
         return connectToMySQL(cls.db_name).query_db(query,data)
     
     @classmethod

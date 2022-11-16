@@ -2,17 +2,11 @@ var search_form = document.getElementById("search_form");
 var our_result = document.getElementById("our_result");
 var min_rating = document.getElementById("min_rating");
 var max_rating = document.getElementById("max_rating");
-// var buttons = document.getElementById("our_buttons");
 var cboxes = document.getElementsByName("genres");
 var elmntToView = document.getElementById("results");
 var logged = false;
 var ourImdbArray = [];
 
-// document.getElementById("search_btn").addEventListener("click", function () {
-//   setTimeout(() => {
-//     document.getElementById("plot").focus();
-//   }, "5000");
-// });
 search_form.onsubmit = function (e) {
   e.preventDefault();
   var checkedValue = [];
@@ -85,14 +79,8 @@ search_form.onsubmit = function (e) {
     let buttons = `
     <div class="text-center" style=" margin-top: 1%;">
   <button type="submit" class =" btn btn-success btn-sm mr-5">Mark as seen</button>
-  <button type="submit" formaction="/future/" class =" btn btn-info btn-sm ml-5">Save for future</button>
   </div>`;
-
-    console.log(our_movie);
-
-    // -------------------------------------------------------------------- Loged
-
-    // -------------------------------------------------------------------- not loggeed
+    // <button type="submit" formaction="/future/" class =" btn btn-info btn-sm ml-5">Save for future</button>
 
     our_result.innerHTML = `
     <form  action="/seen/${our_movie.id}/" method="post">
@@ -135,13 +123,10 @@ search_form.onsubmit = function (e) {
             </div>
             </div>
             </div>
-            ${logged ? buttons : null}
+            ${logged ? buttons : ""}
             </form>
             `;
   }
-  // if (buttons) {
-  //   buttons.style.visibility = "visible";
-  // }
 };
 const listOfImdb = function (arr) {
   for (const every of arr) {

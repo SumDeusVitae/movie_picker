@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Seen movies</title>
+    <title>Watched movies</title>
     <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link
@@ -32,7 +32,7 @@
           <a class="nav-link" href="/logout/">Logout</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{Disabled}</a>
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Thanks for visiting! :p</a>
         </li>
       </ul>
     </div>
@@ -42,11 +42,11 @@
       <div class="container col-10 mx-auto my-auto">
 {% if not seen%}
 <div class="text-white text-center">
-  <h2 class="mt-5 pt-5">Seen will be here once you add them</h2>
+  <h2 class="mt-5 pt-5">Movies you watched will be here once you add them</h2>
 </div>
 {% else %}
 
-      <h1 class="text-center text-white mt-5">Seen movies</h1>
+      <h1 class="text-center text-white mt-5">Watched movies</h1>
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-5">
       {% for movie in seen %}
       <div class="col">
@@ -59,7 +59,7 @@
         <div class="card-body">
           <h5 class="card-title">{{movie.movie_name}}<br>Year published:{{movie.year}} <br> IMDB Rating: {{movie.imdb_rating}} ★ / 10.0 ★</h5>
           <p class="card-text">{{movie.description}}</p>
-          <a href="/unseen/{{movie.movies_id}}" class="btn btn-danger btn-sm">Remove from seen.</a>
+          <a href="/unseen/{{movie.movies_id}}" class="btn btn-danger btn-sm">Remove from Watched.</a>
       </div>
       </div>
       </div>

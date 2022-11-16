@@ -18,38 +18,34 @@ class Movie:
 
     @classmethod
     def save(cls, data):
-        query = 'insert into movies (movie_name,img_src,description,year,imdb_id, imdb_rating, created_at,updated_at) values(%(movie_name)s,%(img_src)s,%(description)s,%(year)s,%(imdb_id)s,%(imdb_rating)s,now(),now())'
+        query ="insert into movies (movie_name,img_src,description,year,imdb_id, imdb_rating, created_at,updated_at) values(%(movie_name)s,%(img_src)s,%(description)s,%(year)s,%(imdb_id)s,%(imdb_rating)s,now(),now());"
         return connectToMySQL(cls.db_name).query_db(query,data)
 
-    # @classmethod
-    # def get_by_id(cls, data):
-    #     query = 'select id from movies where imbd_id = %(imdb_id)s;'
-    #     return connectToMySQL(cls.db_name).query_db(query,data)
-    
+
     @classmethod
     def check_existence(cls,data):
-        query = 'select * from movies where imdb_id = %(imdb_id)s;'
+        query ="select * from movies where imdb_id = %(imdb_id)s;"
         return connectToMySQL(cls.db_name).query_db(query,data)
 
     
 
     @classmethod
     def insert_to_seen(cls,data):
-        query = 'insert into movie_user (movies_id, users_id, type) values(%(movies_id)s,%(users_id)s,%(type)s)'
+        query ="insert into movie_user (movies_id, users_id, type) values(%(movies_id)s,%(users_id)s,%(type)s);"
         return connectToMySQL(cls.db_name).query_db(query,data)
     @classmethod
     def replace_in_seen(cls,data):
-        query = "update movie_user set type=%(type)s where movies_id = %(movie_id)s and users_id= %(user_id)s"
+        query ="update movie_user set type=%(type)s where movies_id = %(movie_id)s and users_id= %(user_id)s;"
         return connectToMySQL(cls.db_name).query_db(query,data)
 
     @classmethod
     def unsee(cls,data):
-        query ="update movie_user set type=%(type)s where movies_id = %(movie_id)s and users_id= %(user_id)s"
+        query ="update movie_user set type=%(type)s where movies_id = %(movie_id)s and users_id= %(user_id)s;"
         return connectToMySQL(cls.db_name).query_db(query,data)
 
     @classmethod
     def search_by_imdb_id(cls,data):
-        query ="select * from movies where imdb_id = %(imdb_id)s"
+        query ="select * from movies where imdb_id = %(imdb_id)s;"
         results = connectToMySQL(cls.db_name).query_db(query,data)
         if len(results) < 1:
             return False
