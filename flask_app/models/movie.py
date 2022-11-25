@@ -60,3 +60,5 @@ class Movie:
         if (Movie.check_existence(movie)):    
             new_movie = False
         return new_movie
+
+
