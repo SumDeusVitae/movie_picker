@@ -42,27 +42,49 @@ search_form.onsubmit = function (e) {
     );
 
     var data = await response.json();
-
+    console.log(`Data.results: ${data.results}`);
     const getRandomMovie = function () {
       let movie, cur_index;
       let our_data = data.results;
-      let lengthofres = data.results.length;
+      let lengthofres = our_data.length;
 
       const search = function () {
         cur_index = Math.floor(Math.random() * lengthofres);
         movie = our_data[cur_index];
       };
-      search();
-      while (lengthofres > 0 && ourImdbArray.includes(movie.id)) {
+      if (lengthofres > 0) {
+        search();
+      } else return false;
+      while (ourImdbArray.includes(movie.id)) {
+        if (lengthofres === 0) return false;
         our_data.splice(cur_index, 1);
-        lengthofres - 1;
+        lengthofres--;
         search();
       }
-      if (lengthofres == 0) return false;
+
       return movie;
     };
 
     our_movie = getRandomMovie();
+
+    // const getRandom = function (data) {
+    //   const result = [];
+    //   const index = Math.floor(Math.random() * data.length);
+    //   result.push(data[index], index);
+    //   return result;
+    // };
+    // const getRandomMovie = function () {
+    //   let our_data = data.results;
+    //   if (our_data.length < 1) return false;
+    //   let randomMovie = getRandom(our_data);
+    //   while (randomMovie[1] > 0 && ourImdbArray.includes(randomMovie[0].id)) {
+    //     our_data.splice(randomMovie[1], 1);
+    //     getRandom(our_data);
+    //   }
+    //   return randomMovie;
+    // };
+
+    // our_movie = getRandomMovie();
 
     if (!our_movie) {
       our_result.innerHTML = `
@@ -95,7 +117,6 @@ search_form.onsubmit = function (e) {
             alt="${our_movie.title}"
             />
         </div>
-          
           <div class="card-body" autofocus>
   
           <h3 class="card-title">${
